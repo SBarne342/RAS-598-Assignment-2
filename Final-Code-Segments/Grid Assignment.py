@@ -4,7 +4,7 @@ import numpy as np
 # Sets the print "cutoff" threshold to be indefinite so that the whole Grid array can be printed
 np.set_printoptions(threshold=np.inf)
 
-def image_to_binary_grid(image_path, grid_rows, grid_cols, threshold=127):
+def image_to_binary_grid(image_path, grid_rows, grid_cols, proximity, threshold=127):
     """
     Converts an image into a grid of 0s and 1s.
     
@@ -54,11 +54,42 @@ def image_to_binary_grid(image_path, grid_rows, grid_cols, threshold=127):
     # Debugging print used to see how the grid lines up with the image
     print(grid)
 
+
+    # -----------------------------
+    # Expand black cells to nearby cells
+    # -----------------------------
+
+    # Make a copy of the grid array to avoid modifying the orriginal while iterating
+    expanded_grid = grid.copy()
+
+    # To ensure that i and j are zero define them as such
+    i = j = 0
+    # First for loop goes down the list of rows while the second goes through each column of each row
+    for i in range(grid_rows):
+        for j in range(grid_cols):
+            # checks if the cells is a 1 and if it is converts all 0's within the proximity to be a 1 too
+            if grid[i, j] == 1:
+                # Overwrites neighbors within 'proximity'
+                # First for loop goes through every row within ∓proximity and the second for loop goes through every column within ∓proximity
+                for di in range(-proximity, proximity+1):
+                    for dj in range(-proximity, proximity+1):
+                        # Assigns the row and column coordinates being potentially overwritten to ni and nj
+                        ni, nj = i + di, j + dj
+                        # Check boundaries of the grid so the grid array isn't accidentally expanded
+                        if 0 <= ni < grid_rows and 0 <= nj < grid_cols:
+                            # overwrites any 0's with a 1
+                            expanded_grid[ni, nj] = 1
+
+    grid = expanded_grid  # update the grid with expanded cells
+    
+    # Debugging print used to see how the grid lines up with the image
+    print(grid)
+    
     return grid
 
 def main():
     # Calls the bit array function which converts the cave_filled.png image to an 80x80 array of 1's and 0's
-    image_to_binary_grid("cave_filled.png", 80, 80)
+    image_to_binary_grid("cave_filled.png", 80, 80, 1)
 
 if __name__ == "__main__":
     main()
