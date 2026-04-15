@@ -6,9 +6,7 @@ import numpy as np
 np.set_printoptions(threshold=np.inf)
 
 class PipelineConfig:
-    """
-    Holds parameters for the point cloud processing pipeline.
-    """
+    # Holds parameters for the point cloud processing pipeline.
     def __init__(self):
         # Image to binary grid configurables
         self.image_path = "cave_filled.png"     # image location
@@ -132,6 +130,7 @@ class Pipeline:
 
 
             """
+            —— TODO ——
             Task Service: Call the /get_task service to receive start and goal coordinates. This resets your energy counter. The response is
             a string of the format "{start_x},{start_y},{goal_x},{goal_y}"
             """
